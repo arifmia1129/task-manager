@@ -22,16 +22,17 @@ export const data = [
     },
 ]
 
+
 export const columnsFromBackend = {
-    [uuidv4()]: {
+    "1": {
         title: "To-do",
         items: data,
     },
-    [uuidv4()]: {
+    "2": {
         title: "In Progress",
         items: [],
     },
-    [uuidv4()]: {
+    "3": {
         title: "Done",
         items: [],
     },
