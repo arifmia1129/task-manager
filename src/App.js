@@ -13,14 +13,40 @@ function App() {
   const [progressTask, setProgressTask] = useState([]);
   const [completeTask, setCompleteTask] = useState([]);
 
-  const state = useSelector(state => state);
-
   const dispatch = useDispatch();
 
+
+  const allTask = {
+    todo: {
+      title: "To-do",
+      items: [
+
+      ],
+    },
+    progress: {
+      title: "In Progress",
+      items: [
+
+      ],
+    },
+    done: {
+      title: "Done",
+      items: [
+
+      ],
+    }
+  }
+
+  // localStorage.setItem("task", JSON.stringify(allTask))
+
+  const localStorageStatus = localStorage.getItem("task");
+
   useEffect(() => {
-    handleTask();
+    if (!localStorageStatus) {
+      localStorage.setItem("task", JSON.stringify(allTask));
+    }
     dispatch(loadTask());
-  }, [dispatch])
+  }, [dispatch, localStorageStatus])
 
   const columnsFromBackend = [
     {

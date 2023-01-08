@@ -6,12 +6,11 @@ import TaskCard from './TaskCard';
 
 
 const Kanban = () => {
-    const state = useSelector(state => state);
-    // console.log(state);
+    const state = useSelector(state => state.task);
     const [columns, setColumns] = useState({});
 
     useEffect(() => {
-        setColumns(state)
+        setColumns(state);
     }, [state])
 
     const onDragEnd = (result, columns, setColumns) => {
@@ -22,8 +21,22 @@ const Kanban = () => {
             const destColumn = columns[destination.droppableId];
             const sourceItems = [...sourceColumn.items];
             const destItems = [...destColumn.items];
+
             const [removed] = sourceItems.splice(source.index, 1);
             destItems.splice(destination.index, 0, removed);
+
+            localStorage.setItem("task", JSON.stringify({
+                ...columns,
+                [source.droppableId]: {
+                    ...sourceColumn,
+                    items: sourceItems,
+                },
+                [destination.droppableId]: {
+                    ...destColumn,
+                    items: destItems,
+                },
+            }))
+
             setColumns({
                 ...columns,
                 [source.droppableId]: {
@@ -40,6 +53,15 @@ const Kanban = () => {
             const copiedItems = [...column.items];
             const [removed] = copiedItems.splice(source.index, 1);
             copiedItems.splice(destination.index, 0, removed);
+
+            localStorage.setItem("task", JSON.stringify({
+                ...columns,
+                [source.droppableId]: {
+                    ...column,
+                    items: copiedItems,
+                },
+            }))
+
             setColumns({
                 ...columns,
                 [source.droppableId]: {
@@ -58,6 +80,7 @@ const Kanban = () => {
                 <div>
                     <div className='m-[8px] flex w-full m-h-[80vh]'>
                         {Object.entries(columns)?.map(([columnId, column], index) => {
+                            ;
                             return (
                                 <Droppable key={columnId} droppableId={columnId}>
                                     {(provided, snapshot) => (
@@ -67,7 +90,7 @@ const Kanban = () => {
                                         >
                                             <div className='text-[#10957d] bg-[rgba(16, 149, 125, 0.15)] py-[2px] px-[10px] rounded-md items-start'>{column.title}</div>
                                             {column.items.map((item, index) => (
-                                                <TaskCard key={item} item={item} index={index} />
+                                                <TaskCard key={index} item={item} index={index} />
                                             ))}
                                             {provided.placeholder}
                                         </div>

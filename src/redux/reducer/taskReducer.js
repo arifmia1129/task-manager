@@ -1,39 +1,29 @@
 import { v4 as uuidv4 } from "uuid"
 const initialState = {
-    todo: {
-        title: "To-do",
-        items: [],
-    },
-    progress: {
-        title: "In Progress",
-        items: [],
-    },
-    done: {
-        title: "Done",
-        items: [],
-    }
+    task: {}
 }
 
 const taskReducer = (state = initialState, action) => {
+    const allTask = JSON.parse(localStorage.getItem("task"));
     switch (action.type) {
         case "load_task":
             return {
-                todo: { ...state.todo, items: action.payload.todo },
-                progress: { ...state.progress, items: action.payload.progress },
-                done: { ...state.done, items: action.payload.complete }
+                task: action.payload
             }
         case "add_todo_from_input":
-            const allTask = JSON.parse(localStorage.getItem("task"));
-
-            allTask.todo.push({ id: uuidv4(), Task: action.payload });
+            allTask.todo.items.push({ id: uuidv4(), Task: action.payload });
             localStorage.setItem("task", JSON.stringify(allTask));
             return {
-                ...state,
-                todo: {
-                    ...state.todo,
-                    items: [...state.todo.items, { id: uuidv4(), Task: action.payload }]
+                task: {
+                    ...state.task,
+                    todo: {
+                        ...state.task.todo,
+                        items: [...state.task.todo.items, { id: uuidv4(), Task: action.payload }]
+                    }
                 }
             }
+
+
         default:
             return state
     }
